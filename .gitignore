@@ -215,8 +215,6 @@ todo.md
 # Template/generated configs
 template_config.json
 
-# Railway config (if contains secrets)
-railway.json
 
 # ================================
 # MEDIA FILES (Large files - use cloud storage)
