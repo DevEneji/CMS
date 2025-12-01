@@ -1,5 +1,4 @@
-# Create Dockerfile in CMS/ folder
-cat > Dockerfile << 'EOF'
+# Stage 1: Build React
 FROM node:18-alpine as react-build
 
 # Build React
@@ -9,11 +8,22 @@ RUN npm install
 COPY media-site-frontend/ ./
 RUN npm run build
 
+# Stage 2: Django with React build
 FROM python:3.11-slim
 
-# Install dependencies
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
 WORKDIR /app
+
+# Copy Django requirements
 COPY media_site/requirements.txt .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy Django project
@@ -28,15 +38,5 @@ RUN python manage.py collectstatic --noinput
 # Run Django
 CMD python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
 
+# Expose port
 EXPOSE $PORT
-EOF
-
-# Update railway.json
-cat > railway.json << 'EOF'
-{
-  "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE"
-  }
-}
-EOF

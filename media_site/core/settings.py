@@ -10,6 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent  # Points to media_site/
 CMS_ROOT = BASE_DIR.parent  # Points to CMS/ folder
 REACT_BUILD_DIR = CMS_ROOT / 'media-site-frontend' / 'build'
 
+# Check if running in container
+IS_DOCKER = os.path.exists('/.dockerenv')
 # Check if running on Railway
 IS_RAILWAY = "RAILWAY" in os.environ or "RAILWAY_ENVIRONMENT" in os.environ
 
@@ -22,7 +24,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--3)_33g5ro_m^$r=fp945ygz6h
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 # Hosts configuration
-if IS_RAILWAY:
+if IS_DOCKER or IS_RAILWAY:
     # Production on Railway
     DEBUG = False  # Force DEBUG=False on Railway
     ALLOWED_HOSTS = ['.railway.app', 'localhost', '127.0.0.1']
