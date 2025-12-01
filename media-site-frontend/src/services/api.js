@@ -1,14 +1,13 @@
 import axios from 'axios';
 
 // Environment-aware API base URL
-// In development: uses localhost:8080
-// In production: uses your Railway app domain
-// You can also set via environment variable REACT_APP_API_URL
+// In production: uses current domain
+// In development: uses localhost:8000
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-    ? process.env.REACT_APP_API_URL || 'https://your-app-name.railway.app' 
-    : 'http://localhost:8080';
+    ? window.location.origin  // Use current domain (https://your-app.railway.app)
+    : 'http://localhost:8000';
 
-console.log('API Base URL:', API_BASE_URL); // Debug log
+console.log('API Base URL:', API_BASE_URL);
 
 // Create axios instance with base configuration
 const api = axios.create({
