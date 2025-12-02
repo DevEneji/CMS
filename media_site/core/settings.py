@@ -10,10 +10,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent  # Points to media_site/
 CMS_ROOT = BASE_DIR.parent  # Points to CMS/ folder
 REACT_BUILD_DIR = CMS_ROOT / 'media-site-frontend' / 'build'
 
-# Check if running in container
-IS_DOCKER = os.path.exists('/.dockerenv')
-# Check if running on Railway
-IS_RAILWAY = "RAILWAY" in os.environ or "RAILWAY_ENVIRONMENT" in os.environ
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Use environment variable for production, fallback for development
@@ -21,9 +17,19 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--3)_33g5ro_m^$r=fp945ygz6h
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Use environment variable, default to True for safety
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-# Hosts configuration
+# Database
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600
+    )
+}
+
+
+"""# Hosts configuration
 if IS_DOCKER or IS_RAILWAY:
     # Production on Railway
     DEBUG = False  # Force DEBUG=False on Railway
@@ -42,11 +48,10 @@ if IS_DOCKER or IS_RAILWAY:
     
 else:
     # Local development
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
     
     # CORS for development (allow all)
     CORS_ALLOW_ALL_ORIGINS = True
-    CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']
+    CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']"""
 
 # Application definition
 INSTALLED_APPS = [
@@ -77,25 +82,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
-
-# Database configuration
-if IS_RAILWAY:
-    # Use Railway PostgreSQL database
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
-    # Local SQLite for development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
 
 # Static files configuration
 STATIC_URL = '/static/'
@@ -190,47 +176,29 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS settings (already configured above in host-specific sections)
-# Add specific development origins for React dev server
-if not IS_RAILWAY:
-    CORS_ALLOWED_ORIGINS = [
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
 
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://your-app.onrender.com', # Add also to ALLOWED_HOSTS above
+    'https://your-frontend.onrender.com',
+]
+
 # Email backend for development
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# Railway-specific settings
-if IS_RAILWAY:
-    # Force HTTPS in production
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    
-    # Logging for Railway
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-            },
-        },
-        'root': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        },
-    }
+
 
 # Print debug info
 print(f"✅ Django settings loaded")
 print(f"   BASE_DIR: {BASE_DIR}")
-print(f"   IS_RAILWAY: {IS_RAILWAY}")
 print(f"   DEBUG: {DEBUG}")
 print(f"   ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 print(f"   REACT_BUILD_DIR: {REACT_BUILD_DIR}")

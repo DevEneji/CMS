@@ -1,0 +1,16 @@
+[phases.setup]
+nixPkgs = ["nodejs", "python3", "python3Packages.pip"]
+
+[phases.install]
+cmds = [
+    "cd media-site-frontend && npm install",
+    "cd media_site && pip install -r requirements.txt"
+]
+
+[phases.build]
+cmds = [
+    "cd media-site-frontend && npm run build"
+]
+
+[start]
+cmd = "cd media_site && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn core.wsgi:application --bind 0.0.0.0:$PORT"
