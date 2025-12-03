@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent  # Points to media_site/
 
 # React Build Path - go up from media_site to CMS, then to media-site-frontend
 CMS_ROOT = BASE_DIR.parent  # Points to CMS/ folder
-REACT_BUILD_DIR = CMS_ROOT / 'media-site-frontend' / 'build'
+REACT_BUILD_DIR = BASE_DIR.parent / 'media-site-frontend' / 'build'
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -17,17 +17,37 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--3)_33g5ro_m^$r=fp945ygz6h
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Use environment variable, default to True for safety
-DEBUG = False
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['cms-xosi.onrender.com', 'localhost', '127.0.0.1']
 
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 
+# If no database URL, use sqlite3 for development
+if not DATABASES['default']:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = []
+if REACT_BUILD_DIR.exists():
+    STATICFILES_DIRS.append(REACT_BUILD_DIR / 'static')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Media files
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 """# Hosts configuration
 if IS_DOCKER or IS_RAILWAY:
@@ -82,27 +102,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
-
-# Static files configuration
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Include React build in static files if it exists
-if REACT_BUILD_DIR.exists() and REACT_BUILD_DIR.is_dir():
-    STATICFILES_DIRS = [
-        os.path.join(REACT_BUILD_DIR, 'static'),
-    ]
-    print(f"✅ React build found at: {REACT_BUILD_DIR}")
-else:
-    print(f"⚠️ React build NOT found at: {REACT_BUILD_DIR}")
-    STATICFILES_DIRS = []
-
-# WhiteNoise configuration for serving static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files configuration
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Template configuration
 TEMPLATE_DIRS = [
@@ -178,6 +177,7 @@ SIMPLE_JWT = {
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
+        "https://cms-xosi.onrender.com",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
@@ -186,8 +186,8 @@ CORS_ALLOWED_ORIGINS = [
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
-    'https://your-app.onrender.com', # Add also to ALLOWED_HOSTS above
-    'https://your-frontend.onrender.com',
+    'https://cms-xosi.onrender.com',
+    'https://cms-xosi.onrender.com',
 ]
 
 # Email backend for development

@@ -3,11 +3,11 @@ services:
     name: django-backend
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn your_project.wsgi:application"
+    startCommand: "gunicorn core.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: django-db
+          name: core-db
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
@@ -30,7 +30,7 @@ services:
     autoDeploy: true
 
 databases:
-  - name: django-db
-    databaseName: django_db
-    user: django_user
+  - name: core-db
+    databaseName: core_db
+    user: core_db_user
     plan: free
