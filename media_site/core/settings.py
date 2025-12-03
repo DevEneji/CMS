@@ -177,7 +177,7 @@ SIMPLE_JWT = {
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
-        "https://cms-xosi.onrender.com",
+        "https://cms-react-frontend.onrender.com",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
@@ -187,7 +187,7 @@ CORS_ALLOWED_ORIGINS = [
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://cms-xosi.onrender.com',
-    'https://cms-xosi.onrender.com',
+    "https://cms-react-frontend.onrender.com",
 ]
 
 # Email backend for development
