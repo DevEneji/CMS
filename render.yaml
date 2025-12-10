@@ -18,10 +18,7 @@ services:
   - type: web
     name: react-frontend
     env: static
-     buildCommand: |
-      cd media-site-frontend
-      npm ci
-      npm run build
+     buildCommand: "cd media-site-frontend && npm install && npm run build"
     staticPublishPath: "./media-site-frontend/build"
     routes:
       - type: rewrite
@@ -30,6 +27,8 @@ services:
     envVars:
       - key: REACT_APP_API_URL
         value: https://django-backend.onrender.com
+      - key: NODE_VERSION
+        value: 20.18.0
     autoDeploy: true
 
 databases:
