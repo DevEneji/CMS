@@ -18,7 +18,11 @@ services:
   - type: web
     name: react-frontend
     env: static
-     buildCommand: "cd media-site-frontend && npm install && npm run build"
+     buildCommand: |
+      cd media-site-frontend
+      rm -rf node_modules
+      npm install
+      npm run build
     staticPublishPath: "./media-site-frontend/build"
     routes:
       - type: rewrite
