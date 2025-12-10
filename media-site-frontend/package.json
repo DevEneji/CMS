@@ -6,7 +6,7 @@
         "build": "vite build --outDir build",
         "lint": "eslint --quiet ./src",
         "preview": "vite preview",
-        "render-build": "pnpm install && pnpm run build"
+        "render-build": "npm install && npm run build"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.9.0",
