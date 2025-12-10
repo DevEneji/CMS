@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--3)_33g5ro_m^$r=fp945ygz6h
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Use environment variable, default to True for safety
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = 'True'
 ALLOWED_HOSTS = ['cms-xosi.onrender.com', 'localhost', '127.0.0.1']
 
 # Database

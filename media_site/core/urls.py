@@ -13,14 +13,18 @@ urlpatterns = [
     path('api/audio/', include('audio.urls')),
     path('api/video/', include('video.urls')),
 
-     # Serve React's index.html for all other routes
-    re_path(r'^.*$', TemplateView.as_view(
-        template_name='index.html',
-        extra_context={}
-    )),
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+     
+]
 
 # Only serve static files in development
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    # Serve React's index.html for all other routes
+    re_path(r'^.*$', TemplateView.as_view(
+        template_name='index.html',
+        extra_context={}
+    )),
+]
