@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--3)_33g5ro_m^$r=fp945ygz6h
 # SECURITY WARNING: don't run with debug turned on in production!
 # Use environment variable, default to True for safety
 DEBUG = 'True'
-ALLOWED_HOSTS = ['cms-xosi.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['cms-xosi.onrender.com', 'cms-react-frontend.onrender.com', 'localhost', '127.0.0.1']
 
 # Database
 DATABASES = {
@@ -49,29 +49,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-"""# Hosts configuration
-if IS_DOCKER or IS_RAILWAY:
-    # Production on Railway
-    DEBUG = False  # Force DEBUG=False on Railway
-    ALLOWED_HOSTS = ['.railway.app', 'localhost', '127.0.0.1']
-    
-    # Get Railway public domain if available
-    railway_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN', '')
-    if railway_domain:
-        ALLOWED_HOSTS.append(railway_domain)
-    
-    # CORS for production
-    CORS_ALLOWED_ORIGINS = [
-        f'https://{railway_domain}' if railway_domain else 'https://*.railway.app',
-    ]
-    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
-    
-else:
-    # Local development
-    
-    # CORS for development (allow all)
-    CORS_ALLOW_ALL_ORIGINS = True
-    CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000']"""
 
 # Application definition
 INSTALLED_APPS = [
@@ -177,7 +154,7 @@ SIMPLE_JWT = {
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
-        "https://cms-react-frontend.onrender.com",
+        "https://your-vercel-app.vercel.app",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
